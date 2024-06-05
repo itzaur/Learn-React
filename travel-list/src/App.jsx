@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import './App.css';
 
 const initialItems = [
@@ -25,6 +25,14 @@ export default function App() {
     );
   }
 
+  function handleClearList() {
+    const confirmed = window.confirm(
+      'Are you sure you want to delete all items?'
+    );
+
+    if (confirmed) setItems([]);
+  }
+
   return (
     <>
       <div className='app'>
@@ -34,6 +42,7 @@ export default function App() {
           items={items}
           onDeleteItems={handleDeleteItems}
           onToggleItem={handleToggleItem}
+          onClearList={handleClearList}
         />
         <Stats items={items} />
       </div>
@@ -83,11 +92,25 @@ function Form({ onAddItems }) {
   );
 }
 
-function PackingList({ items, onDeleteItems, onToggleItem }) {
+function PackingList({ items, onDeleteItems, onToggleItem, onClearList }) {
+  const [sortBy, setSortBy] = useState('input');
+
+  let sortedItems;
+
+  if (sortBy === 'input') sortedItems = items;
+
+  if (sortBy === 'description')
+    sortedItems = items
+      .slice()
+      .sort((a, b) => a.description.localeCompare(b.description));
+
+  if (sortBy === 'packed')
+    sortedItems = items.slice().sort((a, b) => +a.packed - +b.packed);
+
   return (
     <div className='list'>
       <ul>
-        {items.map((item) => (
+        {sortedItems.map((item) => (
           <Item
             item={item}
             key={item.id}
@@ -96,6 +119,15 @@ function PackingList({ items, onDeleteItems, onToggleItem }) {
           />
         ))}
       </ul>
+
+      <div className='actions'>
+        <select value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
+          <option value='input'>Sort by input order</option>
+          <option value='description'>Sort by description</option>
+          <option value='packed'>Sort by packed status</option>
+        </select>
+        <button onClick={onClearList}>Clear list</button>
+      </div>
     </div>
   );
 }

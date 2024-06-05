@@ -52,6 +52,7 @@ h1 {
   align-items: center;
   justify-content: center;
   gap: 0.8rem;
+  flex-wrap: wrap;
 
   padding: 2.8rem 1rem;
 
@@ -60,6 +61,7 @@ h1 {
 
 h3 {
   font-size: 2.4rem;
+  text-align: center;
 
   margin-right: 1.6rem;
 }
@@ -97,6 +99,14 @@ input {
   flex-direction: column;
   gap: 3.2rem;
   align-items: center;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+  justify-content: center;
 }
 
 .actions button,
